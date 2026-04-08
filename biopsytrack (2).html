@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BiopsyTrack — Dra. Mariel Pacheco</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:#f7f6f4;color:#1e293b;min-height:100vh}
+header{background:#fff;border-bottom:1px solid #e2e8f0;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.header-inner{max-width:700px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:34px;height:34px;background:#0d9488;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.logo-text h1{font-size:13px;font-weight:700;color:#1e293b;line-height:1}
+.logo-text p{font-size:10px;color:#94a3b8;margin-top:2px}
+.header-right{display:flex;align-items:center;gap:8px}
+.sync-btn{width:30px;height:30px;border:none;background:#f1f5f9;border-radius:8px;cursor:pointer;font-size:13px}
+nav{display:flex;background:#f1f5f9;border-radius:12px;padding:4px;gap:2px}
+nav button{font-size:11px;padding:6px 10px;border:none;background:transparent;border-radius:8px;cursor:pointer;font-weight:600;color:#64748b;font-family:'DM Sans',sans-serif;white-space:nowrap}
+nav button.active{background:#fff;color:#0d9488;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+main{max-width:700px;margin:0 auto;padding:20px 16px}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.card h2{font-size:13px;font-weight:700;color:#334155;margin-bottom:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.col2{grid-column:span 2}
+label.lbl{display:block;font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+input,select{width:100%;border:1px solid #e2e8f0;border-radius:10px;padding:8px 12px;font-size:13px;color:#334155;font-family:'DM Sans',sans-serif;background:#fff;outline:none;transition:border .15s,box-shadow .15s}
+input:focus,select:focus{border-color:#0d9488;box-shadow:0 0 0 3px rgba(13,148,136,.1)}
+.dist-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.dist-box{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px 8px;text-align:center}
+.dist-box.green{background:#f0fdf4;border-color:#bbf7d0}
+.dist-box.red{background:#fff1f2;border-color:#fecdd3}
+.dist-val{font-size:14px;font-weight:700;color:#1e293b}
+.dist-val.green{color:#16a34a}
+.dist-val.red{color:#dc2626}
+.dist-lbl{font-size:10px;color:#94a3b8;margin-top:2px}
+.gasto-row{border-radius:12px;padding:12px;margin-bottom:10px}
+.gasto-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.gasto-title{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#475569}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.toggle-btn{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:4px 12px;border-radius:20px;border:1px solid #e2e8f0;background:#f8fafc;color:#94a3b8;cursor:pointer;font-family:'DM Sans',sans-serif}
+.toggle-btn.on{background:#f0fdf4;border-color:#bbf7d0;color:#16a34a}
+.toggle-dot{width:12px;height:12px;border-radius:50%;border:2px solid #cbd5e1;flex-shrink:0}
+.toggle-dot.on{background:#16a34a;border-color:#16a34a}
+.btn-primary{width:100%;background:#0d9488;color:#fff;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s}
+.btn-primary:hover{background:#0f766e}
+.btn-primary:disabled{opacity:.6;cursor:not-allowed}
+.alert{padding:12px 16px;border-radius:12px;font-size:13px;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.alert.success{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
+.alert.error{background:#fff1f2;border:1px solid #fecdd3;color:#9f1239}
+.alert.warning{background:#fffbeb;border:1px solid #fde68a;color:#92400e;justify-content:space-between}
+.search-row{display:flex;gap:8px;margin-bottom:14px}
+.search-wrap{position:relative;flex:1}
+.search-wrap input{padding-left:36px}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:14px}
+.reg-card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.reg-body{padding:16px}
+.reg-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.reg-name{font-weight:700;font-size:15px;color:#1e293b}
+.reg-sub{font-size:11px;color:#94a3b8;margin-top:2px}
+.reg-ref{font-size:11px;color:#0d9488;font-weight:600;margin-top:2px}
+.reg-amount{font-weight:700;font-size:15px;color:#1e293b;text-align:right}
+.fp-badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px}
+.reg-row2{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.ref-amount{font-size:12px;color:#64748b}
+.ref-amount span{font-weight:700;color:#16a34a}
+.ref-amount span.red{color:#dc2626}
+.custodio-badge{font-size:10px;font-weight:700;background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:20px}
+.pago-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{font-size:11px;font-weight:700;padding:4px 10px;border-radius:8px;border:1px solid #e2e8f0;background:#f8fafc;color:#64748b;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.chip.paid{background:#f0fdf4;border-color:#bbf7d0;color:#16a34a}
+.chip:hover:not(.paid){background:#fffbeb;border-color:#fde68a}
+.reg-footer{border-top:1px solid #f1f5f9;background:#f8fafc;padding:8px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+.reg-footer button{font-size:12px;font-weight:600;border:none;background:transparent;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-teal{color:#0d9488}
+.btn-gray{color:#64748b}
+.btn-red{color:#f43f5e}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:#fff;border-radius:20px;width:100%;max-width:540px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.modal-header{padding:16px 20px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:10}
+.modal-header h3{font-size:14px;font-weight:700;color:#1e293b}
+.modal-close{width:28px;height:28px;border:none;background:#f1f5f9;border-radius:8px;cursor:pointer;font-size:16px}
+.modal-body{padding:16px 20px}
+.modal-section{margin-bottom:14px;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden}
+.modal-section-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#f8fafc}
+.modal-section-title{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#475569}
+.modal-section-body{padding:12px 14px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.checkbox-wrap{grid-column:span 2;display:flex;align-items:center;gap:8px;padding:4px 0}
+.checkbox-wrap input[type=checkbox]{width:16px;height:16px;accent-color:#0d9488;cursor:pointer;flex-shrink:0}
+.checkbox-wrap label{font-size:12px;font-weight:600;color:#475569;cursor:pointer}
+.modal-footer{padding:12px 20px;border-top:1px solid #e2e8f0;display:flex;gap:8px;position:sticky;bottom:0;background:#fff}
+.btn-save{flex:1;background:#0d9488;color:#fff;border:none;border-radius:10px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-save:disabled{opacity:.6}
+.btn-cancel{background:#f1f5f9;color:#64748b;border:none;border-radius:10px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.detail-grid{padding:14px;display:grid;grid-template-columns:1fr 1fr;gap:8px;border-top:1px solid #f1f5f9}
+.detail-box{border-radius:12px;padding:10px;border:1px solid #e2e8f0;background:#f8fafc;font-size:11px}
+.detail-box.paid{background:#f0fdf4;border-color:#bbf7d0}
+.d-label{font-weight:700;color:#475569;margin-bottom:4px}
+.d-amount{font-size:15px;font-weight:700;color:#1e293b;margin-bottom:4px}
+.d-status{font-weight:700;margin-top:4px;font-size:11px}
+.d-status.ok{color:#16a34a}
+.d-status.pend{color:#f59e0b}
+.factura-ok{display:inline-block;font-size:10px;font-weight:700;background:#dbeafe;color:#1e40af;padding:2px 8px;border-radius:20px;margin-top:4px}
+.factura-no{font-size:10px;color:#94a3b8;margin-top:4px}
+/* Reporte financiero */
+.rep-section{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.rep-section-title{font-size:14px;font-weight:700;color:#1e293b;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.rep-section-sub{font-size:11px;color:#94a3b8;margin-bottom:14px}
+.rep-total-bar{display:flex;align-items:center;justify-content:space-between;border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.rep-total-bar.teal{background:#0d9488;color:#fff}
+.rep-total-bar.dark{background:#1e293b;color:#fff}
+.rep-total-bar.green{background:#f0fdf4;border:1px solid #bbf7d0;color:#166534}
+.rep-total-bar.red{background:#fff1f2;border:1px solid #fecdd3;color:#9f1239}
+.rep-total-bar.amber{background:#fffbeb;border:1px solid #fde68a;color:#92400e}
+.rep-total-bar.blue{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
+.rep-total-label{font-size:13px;font-weight:700}
+.rep-total-label small{display:block;font-size:10px;font-weight:400;opacity:.7;margin-top:2px}
+.rep-total-value{font-size:20px;font-weight:700}
+.rep-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f1f5f9}
+.rep-row:last-child{border-bottom:none}
+.rep-row-label{font-size:12px;color:#64748b;display:flex;align-items:center;gap:6px}
+.rep-row-value{font-size:13px;font-weight:700;color:#1e293b}
+.rep-row-value.red{color:#f43f5e}
+.rep-row-value.green{color:#16a34a}
+.rep-divider{height:1px;background:#f1f5f9;margin:10px 0}
+.rep-person-card{border:1px solid #e2e8f0;border-radius:12px;padding:12px;margin-bottom:10px}
+.rep-person-name{font-size:13px;font-weight:700;color:#334155;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.rep-indent{padding-left:12px;border-left:2px solid #f1f5f9;margin-top:6px}
+.empty{text-align:center;padding:60px 20px;color:#94a3b8}
+.loading{text-align:center;padding:60px 20px;color:#94a3b8}
+.hidden{display:none!important}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{animation:spin 1s linear infinite;display:inline-block}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">🔬</div>
+      <div class="logo-text"><h1>BiopsyTrack</h1><p>Dra. Mariel Pacheco</p></div>
+    </div>
+    <div class="header-right">
+      <button class="sync-btn" onclick="cargarDatos()" title="Sincronizar">🔄</button>
+      <nav>
+        <button class="active" onclick="setTab(0)">Nueva Biopsia</button>
+        <button onclick="setTab(1)">Registros</button>
+        <button onclick="setTab(2)">Reporte</button>
+      </nav>
+    </div>
+  </div>
+</header>
+<main>
+  <div id="tab0">
+    <div id="flash-saved" class="alert success hidden">✓ Guardado en Airtable</div>
+    <div id="flash-error" class="alert error hidden">⚠️ Error al guardar. Verifica tu conexión.</div>
+    <div id="edit-banner" class="alert warning hidden">
+      <span>✏️ Editando registro</span>
+      <button onclick="cancelEdit()" style="font-size:11px;font-weight:700;text-decoration:underline;border:none;background:transparent;cursor:pointer;font-family:'DM Sans',sans-serif">Cancelar</button>
+    </div>
+    <div class="card" style="border-top:3px solid #0d9488">
+      <h2>Procedimiento</h2>
+      <div class="grid2">
+        <div class="col2"><label class="lbl">Paciente *</label><input type="text" id="f_paciente" placeholder="Nombre completo"/></div>
+        <div><label class="lbl">Fecha</label><input type="date" id="f_fecha"/></div>
+        <div><label class="lbl">Médico referente</label><input type="text" id="f_referente"/></div>
+        <div><label class="lbl">Tipo de biopsia</label>
+          <select id="f_tipo_biopsia"><option>Mama trucut</option><option>BAAF tiroides</option><option>BAAF ganglio</option><option>Otra</option></select>
+        </div>
+        <div id="f_otro_wrap" class="hidden"><label class="lbl">Especificar</label><input type="text" id="f_tipo_otro"/></div>
+        <div class="col2"><label class="lbl">Realiza</label><input type="text" id="f_quien_realiza" value="Dra. Mariel Pacheco"/></div>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid #6366f1">
+      <h2>Cobro</h2>
+      <div class="grid2">
+        <div><label class="lbl">Monto cobrado</label><input type="number" id="f_monto_total" placeholder="0" oninput="actualizarDist()"/></div>
+        <div><label class="lbl">Forma de pago</label>
+          <select id="f_forma_pago_total" onchange="toggleCustodio()">
+            <option>Efectivo</option><option>Transferencia</option><option>Tarjeta débito</option><option>Tarjeta crédito</option>
+          </select>
+        </div>
+        <div class="col2" id="custodio_wrap"><label class="lbl">¿Quién resguarda el efectivo?</label><input type="text" id="f_custodio"/></div>
+      </div>
+    </div>
+    <div class="card" style="border-top:3px solid #8b5cf6">
+      <h2>Distribución del cobro</h2>
+      <div class="dist-grid" id="dist_preview" style="display:none">
+        <div class="dist-box"><div class="dist-val" id="d_cobrado">$0</div><div class="dist-lbl">Cobrado</div></div>
+        <div class="dist-box"><div class="dist-val" id="d_gastos">$0</div><div class="dist-lbl">Gastos</div></div>
+        <div class="dist-box" id="d_ref_box"><div class="dist-val" id="d_ref">$0</div><div class="dist-lbl">→ Para mí</div></div>
+      </div>
+      <!-- Radiólogo -->
+      <div class="gasto-row" style="border:1px solid #bae6fd;background:#f0f9ff">
+        <div class="gasto-header">
+          <div class="gasto-title"><span class="dot" style="background:#38bdf8"></span>Radiólogo</div>
+          <button class="toggle-btn" id="tog_radiologo" onclick="togglePago('radiologo')"><span class="toggle-dot" id="tdot_radiologo"></span><span id="tlbl_radiologo">Pendiente</span></button>
+        </div>
+        <div class="grid2">
+          <div class="col2"><label class="lbl">Nombre del radiólogo</label><input type="text" id="f_radiologo_nombre" placeholder="Dr. Nombre Apellido"/></div>
+          <div><label class="lbl">Monto</label><input type="number" id="f_radiologo_monto" placeholder="0" oninput="actualizarDist()"/></div>
+          <div><label class="lbl">Forma de pago</label><select id="f_radiologo_fp"><option>Efectivo</option><option>Transferencia</option><option>Tarjeta débito</option><option>Tarjeta crédito</option></select></div>
+          <div><label class="lbl">Fecha de pago</label><input type="date" id="f_radiologo_fecha"/></div>
+          <div style="display:flex;align-items:flex-end;padding-bottom:4px"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;font-weight:600;color:#475569"><input type="checkbox" id="f_radiologo_factura" style="width:15px;height:15px;accent-color:#0d9488"/> 📄 Factura entregada</label></div>
+        </div>
+      </div>
+      <!-- Patólogo -->
+      <div class="gasto-row" style="border:1px solid #ddd6fe;background:#f5f3ff">
+        <div class="gasto-header">
+          <div class="gasto-title"><span class="dot" style="background:#a78bfa"></span>Patólogo</div>
+          <button class="toggle-btn" id="tog_patologo" onclick="togglePago('patologo')"><span class="toggle-dot" id="tdot_patologo"></span><span id="tlbl_patologo">Pendiente</span></button>
+        </div>
+        <div class="grid2">
+          <div class="col2"><label class="lbl">Nombre del patólogo</label><input type="text" id="f_patologo_nombre" placeholder="Dr. Nombre Apellido"/></div>
+          <div><label class="lbl">Monto</label><input type="number" id="f_patologo_monto" placeholder="0" oninput="actualizarDist()"/></div>
+          <div><label class="lbl">Forma de pago</label><select id="f_patologo_fp"><option>Efectivo</option><option>Transferencia</option><option>Tarjeta débito</option><option>Tarjeta crédito</option></select></div>
+          <div><label class="lbl">Fecha de pago</label><input type="date" id="f_patologo_fecha"/></div>
+          <div style="display:flex;align-items:flex-end;padding-bottom:4px"><label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;font-weight:600;color:#475569"><input type="checkbox" id="f_patologo_factura" style="width:15px;height:15px;accent-color:#0d9488"/> 📄 Factura entregada</label></div>
+        </div>
+      </div>
+      <!-- Ultrasonido -->
+      <div class="gasto-row" style="border:1px solid #d1fae5;background:#f0fdf4">
+        <div class="gasto-header">
+          <div class="gasto-title"><span class="dot" style="background:#fbbf24"></span>Renta ultrasonido</div>
+          <button class="toggle-btn" id="tog_ultrasonido" onclick="togglePago('ultrasonido')"><span class="toggle-dot" id="tdot_ultrasonido"></span><span id="tlbl_ultrasonido">Pendiente</span></button>
+        </div>
+        <div class="grid2">
+          <div><label class="lbl">Monto</label><input type="number" id="f_ultrasonido_monto" placeholder="0" oninput="actualizarDist()"/></div>
+          <div><label class="lbl">Forma de pago</label><select id="f_ultrasonido_fp"><option>Efectivo</option><option>Transferencia</option><option>Tarjeta débito</option><option>Tarjeta crédito</option></select></div>
+          <div class="col2"><label class="lbl">Fecha de pago</label><input type="date" id="f_ultrasonido_fecha"/></div>
+        </div>
+      </div>
+      <!-- Material -->
+      <div class="gasto-row" style="border:1px solid #fbcfe8;background:#fdf2f8">
+        <div class="gasto-header">
+          <div class="gasto-title"><span class="dot" style="background:#fb7185"></span>Material</div>
+          <button class="toggle-btn" id="tog_material" onclick="togglePago('material')"><span class="toggle-dot" id="tdot_material"></span><span id="tlbl_material">Pendiente</span></button>
+        </div>
+        <div class="grid2">
+          <div><label class="lbl">Monto</label><input type="number" id="f_material_monto" placeholder="0" oninput="actualizarDist()"/></div>
+          <div><label class="lbl">Forma de pago</label><select id="f_material_fp"><option>Efectivo</option><option>Transferencia</option><option>Tarjeta débito</option><option>Tarjeta crédito</option></select></div>
+          <div class="col2"><label class="lbl">Fecha de pago</label><input type="date" id="f_material_fecha"/></div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-primary" id="btn_guardar" onclick="guardar()">Guardar registro</button>
+    <div style="height:20px"></div>
+  </div>
+  <div id="tab1" class="hidden">
+    <div class="search-row">
+      <div class="search-wrap"><span class="search-icon">🔍</span><input type="text" id="search_input" placeholder="Buscar paciente o referente…" oninput="renderRegistros()"/></div>
+      <select id="filter_fp" onchange="renderRegistros()" style="width:140px"><option>Todos</option><option>Efectivo</option><option>Transferencia</option><option>Tarjeta débito</option><option>Tarjeta crédito</option></select>
+    </div>
+    <div id="loading_regs" class="loading hidden"><p><span class="spin">⏳</span> Cargando…</p></div>
+    <div id="regs_container"></div>
+  </div>
+  <div id="tab2" class="hidden"><div id="reporte_container"></div></div>
+</main>
+<div class="modal-overlay hidden" id="modal_overlay" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <div class="modal-header"><h3 id="modal_title">Editar pagos</h3><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body" id="modal_body"></div>
+    <div class="modal-footer"><button class="btn-cancel" onclick="closeModal()">Cancelar</button><button class="btn-save" id="btn_modal_save" onclick="guardarModal()">Guardar cambios</button></div>
+  </div>
+</div>
+<script>
+let AT_TOKEN = localStorage.getItem('bt_token') || '';
+const AT_BASE  = 'apppaTXVOrmp9Vmep';
+const AT_TABLE = 'tblvPU3NjSwBUuZI8';
+const AT_URL   = `https://api.airtable.com/v0/${AT_BASE}/${AT_TABLE}`;
+const FP_KEYS  = ['Efectivo','Transferencia','Tarjeta débito','Tarjeta crédito'];
+// Terminal = Transferencia + Tarjeta débito + Tarjeta crédito
+const isTerminal = fp => fp === 'Transferencia' || fp === 'Tarjeta débito' || fp === 'Tarjeta crédito';
+
+let registros=[],editId=null,modalRecId=null,expandedId=null,currentTab=0;
+let pagados={radiologo:false,patologo:false,ultrasonido:false,material:false};
+
+async function atGet(){let all=[],offset=null;do{const url=AT_URL+'?pageSize=100'+(offset?'&offset='+offset:'');const r=await fetch(url,{headers:{Authorization:'Bearer '+AT_TOKEN}});const d=await r.json();if(d.error)throw new Error(d.error.message);all=all.concat(d.records||[]);offset=d.offset;}while(offset);return all;}
+async function atCreate(fields){const r=await fetch(AT_URL,{method:'POST',headers:{Authorization:'Bearer '+AT_TOKEN,'Content-Type':'application/json'},body:JSON.stringify({fields})});return r.json();}
+async function atUpdate(id,fields){const r=await fetch(AT_URL+'/'+id,{method:'PATCH',headers:{Authorization:'Bearer '+AT_TOKEN,'Content-Type':'application/json'},body:JSON.stringify({fields})});return r.json();}
+async function atDelete(id){await fetch(AT_URL+'/'+id,{method:'DELETE',headers:{Authorization:'Bearer '+AT_TOKEN}});}
+
+function atToLocal(rec){const f=rec.fields;return{_id:rec.id,paciente:f.paciente||'',fecha:f.fecha||'',referente:f.referente||'',quien_realiza:f.quien_realiza||'',tipo_biopsia:f.tipo_biopsia||'',monto_total:f.monto_total||0,forma_pago_total:f.forma_pago_total||'Efectivo',custodio_efectivo:f.custodio_efectivo||'',radiologo_nombre:f.radiologo_nombre||'',radiologo_monto:f.radiologo_monto||0,radiologo_forma_pago:f.radiologo_forma_pago||'Efectivo',radiologo_fecha_pago:f.radiologo_fecha_pago||'',radiologo_pagado:!!f.radiologo_pagado,radiologo_factura:!!f.radiologo_factura,patologo_nombre:f.patologo_nombre||'',patologo_monto:f.patologo_monto||0,patologo_forma_pago:f.patologo_forma_pago||'Efectivo',patologo_fecha_pago:f.patologo_fecha_pago||'',patologo_pagado:!!f.patologo_pagado,patologo_factura:!!f.patologo_factura,ultrasonido_monto:f.ultrasonido_monto||0,ultrasonido_forma_pago:f.ultrasonido_forma_pago||'Efectivo',ultrasonido_fecha_pago:f.ultrasonido_fecha_pago||'',ultrasonido_pagado:!!f.ultrasonido_pagado,material_monto:f.material_monto||0,material_forma_pago:f.material_forma_pago||'Efectivo',material_fecha_pago:f.material_fecha_pago||'',material_pagado:!!f.material_pagado,sobrante_calculado:f.sobrante_calculado||0};}
+function localToAt(o){return{paciente:o.paciente,fecha:o.fecha||null,referente:o.referente,quien_realiza:o.quien_realiza,tipo_biopsia:o.tipo_biopsia,monto_total:parseFloat(o.monto_total)||0,forma_pago_total:o.forma_pago_total,custodio_efectivo:o.custodio_efectivo,radiologo_nombre:o.radiologo_nombre||'',radiologo_monto:parseFloat(o.radiologo_monto)||0,radiologo_forma_pago:o.radiologo_forma_pago,radiologo_fecha_pago:o.radiologo_fecha_pago||null,radiologo_pagado:!!o.radiologo_pagado,radiologo_factura:!!o.radiologo_factura,patologo_nombre:o.patologo_nombre||'',patologo_monto:parseFloat(o.patologo_monto)||0,patologo_forma_pago:o.patologo_forma_pago,patologo_fecha_pago:o.patologo_fecha_pago||null,patologo_pagado:!!o.patologo_pagado,patologo_factura:!!o.patologo_factura,ultrasonido_monto:parseFloat(o.ultrasonido_monto)||0,ultrasonido_forma_pago:o.ultrasonido_forma_pago,ultrasonido_fecha_pago:o.ultrasonido_fecha_pago||null,ultrasonido_pagado:!!o.ultrasonido_pagado,material_monto:parseFloat(o.material_monto)||0,material_forma_pago:o.material_forma_pago,material_fecha_pago:o.material_fecha_pago||null,material_pagado:!!o.material_pagado,sobrante_calculado:parseFloat(o.sobrante_calculado)||0};}
+
+window.onload=()=>{document.getElementById('f_fecha').value=new Date().toISOString().split('T')[0];if(checkToken())cargarDatos();};
+function mostrarConfig(){
+  const s=document.getElementById('cfg_screen');
+  s.style.display='flex';
+}
+function guardarToken(){
+  const t=document.getElementById('cfg_token').value.trim();
+  if(!t){alert('Pega tu token de Airtable.');return;}
+  localStorage.setItem('bt_token',t);
+  AT_TOKEN=t;
+  document.getElementById('cfg_screen').style.display='none';
+  cargarDatos();
+}
+function checkToken(){
+  const t=localStorage.getItem('bt_token');
+  if(t){AT_TOKEN=t;return true;}
+  mostrarConfig();
+  return false;
+}
+
+function setTab(n){currentTab=n;[0,1,2].forEach(i=>{document.getElementById('tab'+i).classList.toggle('hidden',i!==n);document.querySelectorAll('nav button')[i].classList.toggle('active',i===n);});if(n===1)renderRegistros();if(n===2)renderReporte();}
+async function cargarDatos(){document.getElementById('loading_regs').classList.remove('hidden');try{const recs=await atGet();registros=recs.map(atToLocal).sort((a,b)=>b.fecha>a.fecha?1:-1);}catch(e){console.error(e);showFlash('error');}document.getElementById('loading_regs').classList.add('hidden');if(currentTab===1)renderRegistros();if(currentTab===2)renderReporte();}
+
+const fmt=v=>{const n=parseFloat(v);if(isNaN(n))return '$0';return new Intl.NumberFormat('es-MX',{style:'currency',currency:'MXN',maximumFractionDigits:0}).format(n);};
+const fpStyle=fp=>({'Efectivo':'background:#d1fae5;color:#065f46','Transferencia':'background:#e0f2fe;color:#0c4a6e','Tarjeta débito':'background:#ede9fe;color:#4c1d95','Tarjeta crédito':'background:#ffedd5;color:#7c2d12'}[fp]||'background:#f1f5f9;color:#475569');
+function showFlash(t){const el=document.getElementById('flash-'+t);el.classList.remove('hidden');setTimeout(()=>el.classList.add('hidden'),2500);}
+function toggleCustodio(){document.getElementById('custodio_wrap').classList.toggle('hidden',document.getElementById('f_forma_pago_total').value!=='Efectivo');}
+document.getElementById('f_tipo_biopsia').addEventListener('change',function(){document.getElementById('f_otro_wrap').classList.toggle('hidden',this.value!=='Otra');});
+function togglePago(p){pagados[p]=!pagados[p];document.getElementById('tog_'+p).classList.toggle('on',pagados[p]);document.getElementById('tdot_'+p).classList.toggle('on',pagados[p]);document.getElementById('tlbl_'+p).textContent=pagados[p]?'Pagado':'Pendiente';}
+function actualizarDist(){const total=parseFloat(document.getElementById('f_monto_total').value)||0;if(!total){document.getElementById('dist_preview').style.display='none';return;}document.getElementById('dist_preview').style.display='grid';const g=['radiologo','patologo','ultrasonido','material'].reduce((s,p)=>s+(parseFloat(document.getElementById('f_'+p+'_monto').value)||0),0);const sob=total-g;document.getElementById('d_cobrado').textContent=fmt(total);document.getElementById('d_gastos').textContent=fmt(g);document.getElementById('d_ref').textContent=fmt(sob);document.getElementById('d_ref_box').className='dist-box '+(sob<0?'red':'green');document.getElementById('d_ref').className='dist-val '+(sob<0?'red':'green');}
+
+function getFormObj(){const t=document.getElementById('f_tipo_biopsia').value;return{paciente:document.getElementById('f_paciente').value.trim(),fecha:document.getElementById('f_fecha').value,referente:document.getElementById('f_referente').value.trim(),quien_realiza:document.getElementById('f_quien_realiza').value.trim(),tipo_biopsia:t==='Otra'?(document.getElementById('f_tipo_otro').value.trim()||'Otra'):t,monto_total:document.getElementById('f_monto_total').value,forma_pago_total:document.getElementById('f_forma_pago_total').value,custodio_efectivo:document.getElementById('f_custodio').value.trim(),radiologo_nombre:document.getElementById('f_radiologo_nombre').value.trim(),radiologo_monto:document.getElementById('f_radiologo_monto').value,radiologo_forma_pago:document.getElementById('f_radiologo_fp').value,radiologo_fecha_pago:document.getElementById('f_radiologo_fecha').value,radiologo_pagado:pagados.radiologo,radiologo_factura:document.getElementById('f_radiologo_factura').checked,patologo_nombre:document.getElementById('f_patologo_nombre').value.trim(),patologo_monto:document.getElementById('f_patologo_monto').value,patologo_forma_pago:document.getElementById('f_patologo_fp').value,patologo_fecha_pago:document.getElementById('f_patologo_fecha').value,patologo_pagado:pagados.patologo,patologo_factura:document.getElementById('f_patologo_factura').checked,ultrasonido_monto:document.getElementById('f_ultrasonido_monto').value,ultrasonido_forma_pago:document.getElementById('f_ultrasonido_fp').value,ultrasonido_fecha_pago:document.getElementById('f_ultrasonido_fecha').value,ultrasonido_pagado:pagados.ultrasonido,material_monto:document.getElementById('f_material_monto').value,material_forma_pago:document.getElementById('f_material_fp').value,material_fecha_pago:document.getElementById('f_material_fecha').value,material_pagado:pagados.material};}
+
+function setFormFromObj(r){document.getElementById('f_paciente').value=r.paciente||'';document.getElementById('f_fecha').value=r.fecha||'';document.getElementById('f_referente').value=r.referente||'';document.getElementById('f_quien_realiza').value=r.quien_realiza||'Dra. Mariel Pacheco';const tipos=['Mama trucut','BAAF tiroides','BAAF ganglio','Otra'];const t=tipos.includes(r.tipo_biopsia)?r.tipo_biopsia:'Otra';document.getElementById('f_tipo_biopsia').value=t;document.getElementById('f_tipo_otro').value=tipos.includes(r.tipo_biopsia)?'':(r.tipo_biopsia||'');document.getElementById('f_otro_wrap').classList.toggle('hidden',t!=='Otra');document.getElementById('f_monto_total').value=r.monto_total||'';document.getElementById('f_forma_pago_total').value=r.forma_pago_total||'Efectivo';document.getElementById('f_custodio').value=r.custodio_efectivo||'';toggleCustodio();document.getElementById('f_radiologo_nombre').value=r.radiologo_nombre||'';document.getElementById('f_patologo_nombre').value=r.patologo_nombre||'';['radiologo','patologo','ultrasonido','material'].forEach(p=>{document.getElementById('f_'+p+'_monto').value=r[p+'_monto']||'';document.getElementById('f_'+p+'_fp').value=r[p+'_forma_pago']||'Efectivo';document.getElementById('f_'+p+'_fecha').value=r[p+'_fecha_pago']||'';pagados[p]=!!r[p+'_pagado'];document.getElementById('tog_'+p).classList.toggle('on',pagados[p]);document.getElementById('tdot_'+p).classList.toggle('on',pagados[p]);document.getElementById('tlbl_'+p).textContent=pagados[p]?'Pagado':'Pendiente';});document.getElementById('f_radiologo_factura').checked=!!r.radiologo_factura;document.getElementById('f_patologo_factura').checked=!!r.patologo_factura;actualizarDist();}
+
+function resetForm(){document.getElementById('f_paciente').value='';document.getElementById('f_fecha').value=new Date().toISOString().split('T')[0];document.getElementById('f_referente').value='';document.getElementById('f_quien_realiza').value='Dra. Mariel Pacheco';document.getElementById('f_tipo_biopsia').value='Mama trucut';document.getElementById('f_tipo_otro').value='';document.getElementById('f_otro_wrap').classList.add('hidden');document.getElementById('f_monto_total').value='';document.getElementById('f_forma_pago_total').value='Efectivo';document.getElementById('f_custodio').value='';document.getElementById('custodio_wrap').classList.remove('hidden');document.getElementById('f_radiologo_nombre').value='';document.getElementById('f_patologo_nombre').value='';['radiologo','patologo','ultrasonido','material'].forEach(p=>{document.getElementById('f_'+p+'_monto').value='';document.getElementById('f_'+p+'_fp').value='Efectivo';document.getElementById('f_'+p+'_fecha').value='';pagados[p]=false;document.getElementById('tog_'+p).classList.remove('on');document.getElementById('tdot_'+p).classList.remove('on');document.getElementById('tlbl_'+p).textContent='Pendiente';});document.getElementById('f_radiologo_factura').checked=false;document.getElementById('f_patologo_factura').checked=false;document.getElementById('dist_preview').style.display='none';}
+
+function cancelEdit(){editId=null;document.getElementById('edit-banner').classList.add('hidden');document.getElementById('btn_guardar').textContent='Guardar registro';resetForm();}
+
+async function guardar(){const f=getFormObj();if(!f.paciente){alert('El nombre del paciente es obligatorio.');return;}const btn=document.getElementById('btn_guardar');btn.disabled=true;btn.textContent='Guardando…';try{const total=parseFloat(f.monto_total)||0;const g=(parseFloat(f.radiologo_monto)||0)+(parseFloat(f.patologo_monto)||0)+(parseFloat(f.ultrasonido_monto)||0)+(parseFloat(f.material_monto)||0);f.sobrante_calculado=total-g;if(editId){await atUpdate(editId,localToAt(f));registros=registros.map(x=>x._id===editId?{...f,_id:editId}:x);editId=null;document.getElementById('edit-banner').classList.add('hidden');}else{const res=await atCreate(localToAt(f));registros=[{...f,_id:res.id},...registros];}resetForm();showFlash('saved');setTab(1);}catch(e){console.error(e);showFlash('error');}finally{btn.disabled=false;btn.textContent='Guardar registro';}}
+
+function renderRegistros(){const s=document.getElementById('search_input').value.toLowerCase();const fp=document.getElementById('filter_fp').value;const f=registros.filter(r=>{const ok=!s||r.paciente?.toLowerCase().includes(s)||r.referente?.toLowerCase().includes(s)||r.tipo_biopsia?.toLowerCase().includes(s);return ok&&(fp==='Todos'||r.forma_pago_total===fp);});const c=document.getElementById('regs_container');if(!f.length){c.innerHTML='<div class="empty"><p>🔬</p><p>Sin registros</p></div>';return;}c.innerHTML=f.map(regCard).join('');}
+
+function regCard(r){const sob=parseFloat(r.sobrante_calculado)||0;const chips=[{k:'radiologo',l:'Rad',m:r.radiologo_monto},{k:'patologo',l:'Pat',m:r.patologo_monto},{k:'ultrasonido',l:'US',m:r.ultrasonido_monto},{k:'material',l:'Mat',m:r.material_monto}].filter(x=>parseFloat(x.m)>0).map(x=>`<button class="chip ${r[x.k+'_pagado']?'paid':''}" onclick="quickToggle('${r._id}','${x.k}')">${r[x.k+'_pagado']?'✓':'○'} ${x.l} ${fmt(x.m)}</button>`).join('');const isOpen=expandedId===r._id;return `<div class="reg-card"><div class="reg-body"><div class="reg-top"><div><div class="reg-name">${r.paciente}</div><div class="reg-sub">${r.fecha} · ${r.tipo_biopsia}</div>${r.referente?`<div class="reg-ref">↗ ${r.referente}</div>`:''}</div><div><div class="reg-amount">${fmt(r.monto_total)}</div><span class="fp-badge" style="${fpStyle(r.forma_pago_total)}">${r.forma_pago_total}</span></div></div><div class="reg-row2"><div class="ref-amount">Para mí: <span class="${sob<0?'red':''}">${fmt(sob)}</span></div>${r.forma_pago_total==='Efectivo'&&r.custodio_efectivo?`<span class="custodio-badge">💵 ${r.custodio_efectivo}</span>`:''}</div><div class="pago-chips">${chips}</div></div><div class="reg-footer"><button class="btn-teal" onclick="toggleDetail('${r._id}')">${isOpen?'Ocultar ▲':'Ver detalle ▼'}</button><div style="display:flex;gap:10px"><button class="btn-teal" onclick="openModal('${r._id}')">✏️ Pagos</button><button class="btn-gray" onclick="editarCompleto('${r._id}')">Editar</button><button class="btn-red" onclick="eliminar('${r._id}')">Eliminar</button></div></div>${isOpen?detalleHTML(r):''}</div>`;}
+
+function detalleHTML(r){return `<div class="detail-grid">${[{l:'Radiólogo'+(r.radiologo_nombre?' — '+r.radiologo_nombre:''),m:r.radiologo_monto,fp:r.radiologo_forma_pago,f:r.radiologo_fecha_pago,ok:r.radiologo_pagado,fac:r.radiologo_factura,showFac:true},{l:'Patólogo'+(r.patologo_nombre?' — '+r.patologo_nombre:''),m:r.patologo_monto,fp:r.patologo_forma_pago,f:r.patologo_fecha_pago,ok:r.patologo_pagado,fac:r.patologo_factura,showFac:true},{l:'Ultrasonido',m:r.ultrasonido_monto,fp:r.ultrasonido_forma_pago,f:r.ultrasonido_fecha_pago,ok:r.ultrasonido_pagado,fac:null,showFac:false},{l:'Material',m:r.material_monto,fp:r.material_forma_pago,f:r.material_fecha_pago,ok:r.material_pagado,fac:null,showFac:false}].filter(x=>parseFloat(x.m)>0).map(x=>`<div class="detail-box ${x.ok?'paid':''}"><div class="d-label">${x.l}</div><div class="d-amount">${fmt(x.m)}</div><span class="fp-badge" style="${fpStyle(x.fp)}">${x.fp}</span>${x.f?`<div style="font-size:11px;color:#94a3b8;margin-top:4px">${x.f}</div>`:''}<div class="d-status ${x.ok?'ok':'pend'}">${x.ok?'✓ Pagado':'⏳ Pendiente'}</div>${x.showFac?(x.fac?'<div class="factura-ok">📄 Factura ✓</div>':'<div class="factura-no">Sin factura</div>'):''}</div>`).join('')}</div>`;}
+
+function toggleDetail(id){expandedId=expandedId===id?null:id;renderRegistros();}
+async function quickToggle(id,prefix){const r=registros.find(x=>x._id===id);if(!r)return;const campo=prefix+'_pagado';const on=!r[campo];const fc=prefix+'_fecha_pago';const updated={...r,[campo]:on,[fc]:on?(r[fc]||new Date().toISOString().split('T')[0]):r[fc]};registros=registros.map(x=>x._id===id?updated:x);renderRegistros();try{await atUpdate(id,localToAt(updated));}catch(e){console.error(e);}}
+function editarCompleto(id){const r=registros.find(x=>x._id===id);if(!r)return;editId=id;setFormFromObj(r);document.getElementById('edit-banner').classList.remove('hidden');document.getElementById('btn_guardar').textContent='Actualizar registro';setTab(0);}
+async function eliminar(id){if(!confirm('¿Eliminar este registro?'))return;registros=registros.filter(x=>x._id!==id);if(expandedId===id)expandedId=null;renderRegistros();try{await atDelete(id);}catch(e){console.error(e);}}
+
+function openModal(id){const r=registros.find(x=>x._id===id);if(!r)return;modalRecId=id;document.getElementById('modal_title').textContent='Editar pagos — '+r.paciente;const fpOpts=FP_KEYS.map(f=>`<option>${f}</option>`).join('');const sections=[{key:'radiologo',label:'Radiólogo'+(r.radiologo_nombre?' — '+r.radiologo_nombre:''),color:'#38bdf8',factura:true},{key:'patologo',label:'Patólogo'+(r.patologo_nombre?' — '+r.patologo_nombre:''),color:'#a78bfa',factura:true},{key:'ultrasonido',label:'Renta ultrasonido',color:'#fbbf24',factura:false},{key:'material',label:'Material',color:'#fb7185',factura:false}].map(s=>`<div class="modal-section"><div class="modal-section-header"><div class="modal-section-title"><span class="dot" style="background:${s.color}"></span>${s.label}</div><button class="toggle-btn ${r[s.key+'_pagado']?'on':''}" id="mtog_${s.key}" onclick="toggleModalPago('${s.key}')"><span class="toggle-dot ${r[s.key+'_pagado']?'on':''}" id="mtdot_${s.key}"></span><span id="mtlbl_${s.key}">${r[s.key+'_pagado']?'Pagado':'Pendiente'}</span></button></div><div class="modal-section-body"><div><label class="lbl">Monto</label><input type="number" id="m_${s.key}_monto" value="${r[s.key+'_monto']||''}" placeholder="0"/></div><div><label class="lbl">Forma de pago</label><select id="m_${s.key}_fp">${fpOpts}</select></div><div class="col2" style="grid-column:span 2"><label class="lbl">Fecha de pago</label><input type="date" id="m_${s.key}_fecha" value="${r[s.key+'_fecha_pago']||''}"/></div>${s.factura?`<div class="checkbox-wrap" style="grid-column:span 2"><input type="checkbox" id="m_${s.key}_factura" ${r[s.key+'_factura']?'checked':''}/><label for="m_${s.key}_factura">📄 Factura entregada</label></div>`:''}</div></div>`).join('');document.getElementById('modal_body').innerHTML=sections;['radiologo','patologo','ultrasonido','material'].forEach(k=>{const sel=document.getElementById('m_'+k+'_fp');if(sel)sel.value=r[k+'_forma_pago']||'Efectivo';});document.getElementById('modal_overlay').classList.remove('hidden');}
+function toggleModalPago(key){const btn=document.getElementById('mtog_'+key);const on=btn.classList.toggle('on');document.getElementById('mtdot_'+key).classList.toggle('on',on);document.getElementById('mtlbl_'+key).textContent=on?'Pagado':'Pendiente';}
+function closeModal(){document.getElementById('modal_overlay').classList.add('hidden');modalRecId=null;}
+function closeModalOutside(e){if(e.target===document.getElementById('modal_overlay'))closeModal();}
+async function guardarModal(){const r=registros.find(x=>x._id===modalRecId);if(!r)return;const btn=document.getElementById('btn_modal_save');btn.disabled=true;btn.textContent='Guardando…';const updated={...r};['radiologo','patologo','ultrasonido','material'].forEach(k=>{updated[k+'_pagado']=document.getElementById('mtog_'+k)?.classList.contains('on')||false;updated[k+'_monto']=parseFloat(document.getElementById('m_'+k+'_monto')?.value)||0;updated[k+'_forma_pago']=document.getElementById('m_'+k+'_fp')?.value||'Efectivo';updated[k+'_fecha_pago']=document.getElementById('m_'+k+'_fecha')?.value||'';const facEl=document.getElementById('m_'+k+'_factura');if(facEl)updated[k+'_factura']=facEl.checked;});const total=parseFloat(updated.monto_total)||0;const g=(parseFloat(updated.radiologo_monto)||0)+(parseFloat(updated.patologo_monto)||0)+(parseFloat(updated.ultrasonido_monto)||0)+(parseFloat(updated.material_monto)||0);updated.sobrante_calculado=total-g;try{await atUpdate(modalRecId,localToAt(updated));registros=registros.map(x=>x._id===modalRecId?updated:x);closeModal();renderRegistros();if(currentTab===2)renderReporte();}catch(e){console.error(e);alert('Error al guardar.');}finally{btn.disabled=false;btn.textContent='Guardar cambios';}}
+
+// ════════════════════════════════════════════
+// REPORTE FINANCIERO — lógica nueva
+// ════════════════════════════════════════════
+function renderReporte(){
+  const c = document.getElementById('reporte_container');
+  if(!registros.length){c.innerHTML='<div class="empty"><p>📊</p><p>Sin registros</p></div>';return;}
+
+  // ── Totales generales ──
+  let totalEntro = 0;
+  let miEfectivo = 0, miTerminal = 0;
+
+  // ── Por radiólogo ──
+  const radMap = {}; // key = nombre o "Sin nombre"
+  // ── Por patólogo ──
+  const patMap = {};
+  // ── Ultrasonido ──
+  let usTotalAcordado = 0, usPagadoEfectivo = 0, usPagadoTerminal = 0, usDebe = 0;
+  // ── Material ──
+  let matTotalAcordado = 0, matPagadoEfectivo = 0, matPagadoTerminal = 0, matDebe = 0;
+
+  registros.forEach(r => {
+    const fp = r.forma_pago_total;
+    const tot = parseFloat(r.monto_total)||0;
+    const sob = parseFloat(r.sobrante_calculado)||0;
+    const rad = parseFloat(r.radiologo_monto)||0;
+    const pat = parseFloat(r.patologo_monto)||0;
+    const us  = parseFloat(r.ultrasonido_monto)||0;
+    const mat = parseFloat(r.material_monto)||0;
+
+    totalEntro += tot;
+
+    // Mi dinero (sobrante) por método de pago de ingreso
+    if(fp === 'Efectivo') miEfectivo += sob;
+    else miTerminal += sob;
+
+    // Radiólogo
+    const radNombre = r.radiologo_nombre || 'Sin nombre';
+    if(!radMap[radNombre]) radMap[radNombre] = {total:0,pagadoEfectivo:0,pagadoTerminal:0,debe:0,facOk:0,facNo:0};
+    radMap[radNombre].total += rad;
+    if(r.radiologo_pagado){
+      if(r.radiologo_forma_pago==='Efectivo') radMap[radNombre].pagadoEfectivo += rad;
+      else radMap[radNombre].pagadoTerminal += rad;
+    } else {
+      radMap[radNombre].debe += rad;
+    }
+    if(rad>0){ r.radiologo_factura ? radMap[radNombre].facOk++ : radMap[radNombre].facNo++; }
+
+    // Patólogo
+    const patNombre = r.patologo_nombre || 'Sin nombre';
+    if(!patMap[patNombre]) patMap[patNombre] = {total:0,pagadoEfectivo:0,pagadoTerminal:0,debe:0,facOk:0,facNo:0};
+    patMap[patNombre].total += pat;
+    if(r.patologo_pagado){
+      if(r.patologo_forma_pago==='Efectivo') patMap[patNombre].pagadoEfectivo += pat;
+      else patMap[patNombre].pagadoTerminal += pat;
+    } else {
+      patMap[patNombre].debe += pat;
+    }
+    if(pat>0){ r.patologo_factura ? patMap[patNombre].facOk++ : patMap[patNombre].facNo++; }
+
+    // Ultrasonido
+    usTotalAcordado += us;
+    if(r.ultrasonido_pagado){
+      if(r.ultrasonido_forma_pago==='Efectivo') usPagadoEfectivo += us;
+      else usPagadoTerminal += us;
+    } else { usDebe += us; }
+
+    // Material
+    matTotalAcordado += mat;
+    if(r.material_pagado){
+      if(r.material_forma_pago==='Efectivo') matPagadoEfectivo += mat;
+      else matPagadoTerminal += mat;
+    } else { matDebe += mat; }
+  });
+
+  const miTotal = miEfectivo + miTerminal;
+
+  // ── Helper: persona card (radiólogo o patólogo) ──
+  const personaCard = (nombre, d, tipo) => {
+    const pagadoTotal = d.pagadoEfectivo + d.pagadoTerminal;
+    return `
+    <div class="rep-person-card">
+      <div class="rep-person-name">${tipo==='rad'?'👤':'🔬'} ${nombre}</div>
+      <div class="rep-total-bar dark" style="margin-bottom:8px">
+        <div class="rep-total-label">Total acordado<small>${fmt(pagadoTotal)} pagado · ${fmt(d.debe)} pendiente</small></div>
+        <div class="rep-total-value">${fmt(d.total)}</div>
+      </div>
+      ${pagadoTotal>0?`
+      <div style="margin-bottom:8px">
+        <div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Lo que se ha pagado</div>
+        <div class="rep-indent">
+          ${d.pagadoEfectivo>0?`<div class="rep-row"><span class="rep-row-label">💵 Efectivo</span><span class="rep-row-value green">${fmt(d.pagadoEfectivo)}</span></div>`:''}
+          ${d.pagadoTerminal>0?`<div class="rep-row"><span class="rep-row-label">💳 Terminal</span><span class="rep-row-value green">${fmt(d.pagadoTerminal)}</span></div>`:''}
+        </div>
+      </div>`:''}
+      <div class="rep-total-bar ${d.debe>0?'red':'green'}">
+        <div class="rep-total-label">Lo que se le debe</div>
+        <div class="rep-total-value">${d.debe>0?fmt(d.debe):'✓ Pagado'}</div>
+      </div>
+      ${d.facNo>0?`<div style="margin-top:8px;font-size:11px;color:#f43f5e;font-weight:600">⚠️ ${d.facNo} factura${d.facNo>1?'s':''} pendiente${d.facNo>1?'s':''}</div>`:`<div style="margin-top:8px;font-size:11px;color:#16a34a;font-weight:600">✓ Facturas al corriente</div>`}
+    </div>`;
+  };
+
+  // ── Sección ultrasonido/material ──
+  const gastoSeccion = (titulo, emoji, totalAcordado, pagadoEfectivo, pagadoTerminal, debe) => {
+    const pagadoTotal = pagadoEfectivo + pagadoTerminal;
+    return `
+    <div class="rep-section">
+      <div class="rep-section-title">${emoji} ${titulo}</div>
+      <div class="rep-section-sub">Resumen acumulado</div>
+      <div class="rep-total-bar dark" style="margin-bottom:10px">
+        <div class="rep-total-label">Gran total del período</div>
+        <div class="rep-total-value">${fmt(totalAcordado)}</div>
+      </div>
+      ${pagadoTotal>0?`
+      <div style="margin-bottom:10px">
+        <div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Lo que se ha pagado — ${fmt(pagadoTotal)}</div>
+        <div class="rep-indent">
+          ${pagadoEfectivo>0?`<div class="rep-row"><span class="rep-row-label">💵 Efectivo</span><span class="rep-row-value green">${fmt(pagadoEfectivo)}</span></div>`:''}
+          ${pagadoTerminal>0?`<div class="rep-row"><span class="rep-row-label">💳 Terminal</span><span class="rep-row-value green">${fmt(pagadoTerminal)}</span></div>`:''}
+        </div>
+      </div>`:''}
+      <div class="rep-total-bar ${debe>0?'red':'green'}">
+        <div class="rep-total-label">Lo que se debe</div>
+        <div class="rep-total-value">${debe>0?fmt(debe):'✓ Al corriente'}</div>
+      </div>
+    </div>`;
+  };
+
+  c.innerHTML = `
+    <!-- ═══ MI DINERO ═══ -->
+    <div class="rep-section" style="border-top:3px solid #0d9488">
+      <div class="rep-section-title">💰 Mi dinero (Dra. Mariel)</div>
+      <div class="rep-section-sub">${registros.length} biopsia${registros.length!==1?'s':''} registrada${registros.length!==1?'s':''}</div>
+
+      <div class="rep-total-bar dark" style="margin-bottom:10px">
+        <div class="rep-total-label">Total que entró</div>
+        <div class="rep-total-value">${fmt(totalEntro)}</div>
+      </div>
+
+      <div class="rep-total-bar teal" style="margin-bottom:10px">
+        <div class="rep-total-label">Mi gran total<small>Lo que me quedo yo</small></div>
+        <div class="rep-total-value">${fmt(miTotal)}</div>
+      </div>
+
+      <div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Desglose de mi total</div>
+      <div class="rep-indent">
+        ${miEfectivo>0?`<div class="rep-row"><span class="rep-row-label">💵 Efectivo</span><span class="rep-row-value">${fmt(miEfectivo)}</span></div>`:''}
+        ${miTerminal>0?`<div class="rep-row"><span class="rep-row-label">💳 Terminal (tarjeta/transf.)</span><span class="rep-row-value">${fmt(miTerminal)}</span></div>`:''}
+        ${miEfectivo===0&&miTerminal===0?`<div style="font-size:12px;color:#94a3b8">Sin sobrantes registrados</div>`:''}
+      </div>
+    </div>
+
+    <!-- ═══ RADIÓLOGOS ═══ -->
+    <div class="rep-section" style="border-top:3px solid #38bdf8">
+      <div class="rep-section-title">🩻 Radiólogos</div>
+      <div class="rep-section-sub">Por nombre de radiólogo</div>
+      ${Object.keys(radMap).length===0?'<p style="font-size:13px;color:#94a3b8">Sin registros</p>':Object.entries(radMap).map(([n,d])=>personaCard(n,d,'rad')).join('')}
+    </div>
+
+    <!-- ═══ PATÓLOGOS ═══ -->
+    <div class="rep-section" style="border-top:3px solid #a78bfa">
+      <div class="rep-section-title">🔬 Patólogos</div>
+      <div class="rep-section-sub">Por nombre de patólogo</div>
+      ${Object.keys(patMap).length===0?'<p style="font-size:13px;color:#94a3b8">Sin registros</p>':Object.entries(patMap).map(([n,d])=>personaCard(n,d,'pat')).join('')}
+    </div>
+
+    <!-- ═══ ULTRASONIDO ═══ -->
+    ${gastoSeccion('Ultrasonido','🔊',usTotalAcordado,usPagadoEfectivo,usPagadoTerminal,usDebe)}
+
+    <!-- ═══ MATERIAL ═══ -->
+    ${gastoSeccion('Material','📦',matTotalAcordado,matPagadoEfectivo,matPagadoTerminal,matDebe)}
+  `;
+}
+</script>
+
+<div id="cfg_screen" style="display:none;position:fixed;inset:0;background:#f7f6f4;z-index:999;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#fff;border-radius:20px;padding:32px;max-width:420px;width:100%;box-shadow:0 8px 30px rgba(0,0,0,.12)">
+    <div style="text-align:center;margin-bottom:24px">
+      <div style="width:56px;height:56px;background:#0d9488;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 12px">🔬</div>
+      <h2 style="font-size:18px;font-weight:700;color:#1e293b">BiopsyTrack</h2>
+      <p style="font-size:13px;color:#94a3b8;margin-top:4px">Dra. Mariel Pacheco</p>
+    </div>
+    <label style="display:block;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Token de Airtable</label>
+    <input type="password" id="cfg_token" placeholder="Pega tu token aquí (pat...)"
+      style="width:100%;border:1px solid #e2e8f0;border-radius:10px;padding:10px 14px;font-size:13px;color:#334155;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:8px"/>
+    <p style="font-size:11px;color:#94a3b8;margin-bottom:16px">Se guarda solo en este dispositivo. Solo necesitas hacerlo una vez.</p>
+    <button onclick="guardarToken()"
+      style="width:100%;background:#0d9488;color:#fff;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif">
+      Conectar con Airtable
+    </button>
+  </div>
+</div>
+</body>
+</html>
